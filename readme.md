@@ -1,4 +1,4 @@
-# FUSE 6.1 POC 
+## FUSE 6.1 POC 
 
 Demonstrates
 
@@ -9,21 +9,21 @@ Demonstrates
 - Aggregation
 
 
-##Address Service 
+###Address Service 
 
 - Splits incoming message on <urn:Product>
-- Routes incoming request to different backend services based on <urn:SystemID>
+- Routes message request to different backend services based on <urn:SystemID>
 - Handles Errors - Timeouts (TODO)
 - Returns Aggregated message
 
-###Install
+####Install
 features:addUrl mvn:org.poc/service/1.0.0-SNAPSHOT/xml/features
 
 features:install addressservice
 
 http://localhost:8185/address?wsdl
 
-###Testing
+####Testing
 In SOAP UI send the following to the service
 
 - Successful /service/src/test/resources/inbound.request.xml
@@ -31,49 +31,48 @@ In SOAP UI send the following to the service
 - Timeout /service/src/test/resources/inbound.request-timeout.xml
 
 
-##ServiceBBB 
+###ServiceBBB 
 
 - Transforms request into response via XSLT
 - Handles Multiple <urn:Product>
 
-###Install
+####Install
 
 features:addUrl mvn:org.poc/serviceBBB/1.0.0-SNAPSHOT/xml/features
 
 features:install serviceBBB
 
-http://localhost:8187/BBB?wsdl
+http://localhost:8186/BBB?wsdl
 
-###Testing
+####Testing
 
 In SOAP UI send the following to the service
 
 /serviceBBB/src/test/resources/outbound.request.bbb.xml
 
 
-##ServiceCCC 
+###ServiceCCC 
 - Transforms request into response via XSLT
 - Sends different response for Id 3333333333 and 5555555555
 - Any other id has warning message
 
-###Install
+####Install
 
 features:addUrl mvn:org.poc/serviceCCC/1.0.0-SNAPSHOT/xml/features
 
 features:install serviceCCC
 
-http://localhost:8186/CCC?wsdl
+http://localhost:8187/CCC?wsdl
 
-###Testing
+####Testing
 
 In SOAP UI send the following to the service
 
 /serviceCCC/src/test/resources/outbound.request.ccc.xml
-
 /serviceCCC/src/test/resources/outbound.request.ccc.2.xml
 
 
-##To develop
+###To develop
 
 1) Get version of fuse and unzip - tested using jboss-fuse-6.1.0.redhat-379
 

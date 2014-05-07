@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:urn="urn:suncorp-com-au:schema:enterprise:getaddress:2012:05">
 	<xsl:param name="correlationId" />
 	<xsl:param name="userId" />
+	<xsl:output method="xml" indent="yes"/>	
 	<xsl:template match="/">
 		<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
 			<soapenv:Header />
@@ -16,7 +15,7 @@
 								<urn:CustomerID>
 									<xsl:value-of select="urn:CustomerID" />
 								</urn:CustomerID>
-								<urn:SystemID>BBB</urn:SystemID>
+								<urn:SystemID>CCC</urn:SystemID>
 								<urn:JointCustomer>
 									<xsl:value-of select="urn:JointCustomer" />
 								</urn:JointCustomer>

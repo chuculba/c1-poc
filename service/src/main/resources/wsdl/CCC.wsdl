@@ -1,5 +1,4 @@
-
-<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:suncorp-com-au:schema:enterprise:getaddress:2012:05" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="ServiceCCCEndpointService" targetNamespace="urn:suncorp-com-au:schema:enterprise:getaddress:2012:05">
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:suncorp-com-au:schema:enterprise:getaddress:2012:05" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="ServiceCCCEndpointService" targetNamespace="urn:suncorp-com-au:schema:enterprise:getaddress:2012:05">
   <wsdl:types>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:suncorp-com-au:schema:enterprise:getaddress:2012:05" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="urn:suncorp-com-au:schema:enterprise:getaddress:2012:05">
   <xsd:element name="GetAddressRequest" type="tns:GetAddressRequest"/>

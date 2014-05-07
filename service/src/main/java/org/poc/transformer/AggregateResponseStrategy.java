@@ -16,19 +16,12 @@ public class AggregateResponseStrategy implements AggregationStrategy {
 	        }
 	 
 	        String oldResponse = oldExchange.getIn().getBody(String.class);
-	        String newResponse = newExchange.getIn().getBody(String.class);
-	 
-	        System.out.println("old " + oldResponse);
-	        System.out.println("new " + newResponse);
+	        String newResponse = newExchange.getIn().getBody(String.class);	 
 	        
 	        // put responses together separating by new line 
 	        String aggregatedResponse = oldResponse + "\n" + newResponse;
 	        // put combined  responses back on old to preserve it
 	        oldExchange.getIn().setBody(aggregatedResponse);
-
-	        System.out.println("aggregated " + aggregatedResponse);
-	    
-
 	        
 	        // return old as this is the one that has all the responses gathered until now
 	        return oldExchange;
