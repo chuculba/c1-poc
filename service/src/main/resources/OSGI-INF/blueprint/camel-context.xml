@@ -1,71 +1,89 @@
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
-	xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf">
+	xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
+	xmlns:http-conf="http://cxf.apache.org/transports/http/configuration">
 
 	<cxf:cxfEndpoint id="addressEndpoint" address="http://localhost:8185/address"
 		serviceClass="org.poc.ws.AddressEndpoint" xmlns:ns="suncorp-com-au:schema:enterprise:getaddress:2012:05" />
 
 	<bean id="aggregateResponseStrategy" class="org.poc.transformer.AggregateResponseStrategy" />
 
+	<bean id="aggregateRequestsStrategy" class="org.poc.transformer.AggregateRequestsStrategy" />
+
+	<!-- <import resource="classpath:META-INF/cxf/cxf.xml"/> -->
+
+	<http-conf:conduit name="*.http-conduit">
+		<http-conf:client ReceiveTimeout="2000" />
+	</http-conf:conduit>
+
+	<bean id="noErrorHandler" class="org.apache.camel.builder.NoErrorHandlerBuilder" />
 
 	<camelContext id="address-service-context"
-		xmlns="http://camel.apache.org/schema/blueprint">
+		xmlns="http://camel.apache.org/schema/blueprint" errorHandlerRef="noErrorHandler">
 		<route id="addressRoute">
 			<from uri="cxf:bean:addressEndpoint?dataFormat=MESSAGE" />
-			<convertBodyTo type="java.lang.String"/>			
+			<convertBodyTo type="java.lang.String" />
 			<log message="Incoming message ${body}" />
-			<split streaming="true" strategyRef="aggregateResponseStrategy">
+
+			<!-- Split all the messages -->
+			<split streaming="true" parallelProcessing="true" strategyRef="aggregateResponseStrategy" >
 				<tokenize token="Product" xml="true" inheritNamespaceTagName="GetAddressRequest" />
-				<to uri="direct:serviceChoice" />
+				<log message="Product ${body}" />
+				<choice>
+					<when>
+						<xpath>//*:SystemID/text() = 'AAA'</xpath>
+						<log message="Service AAA ${body}" />
+					</when>
+					<when>
+						<xpath>//*:SystemID/text() = 'BBB'</xpath>
+						<log message="Message in to BBB Aggregation ${id}" />
+						
+<!-- 							<transform> -->
+<!-- 								<simple>&lt;root&gt;${body}&lt;&#47;root&gt;</simple> -->
+<!-- 							</transform> -->
+<!-- 							<log message="************* Calling BBB with ${body}" /> -->
+<!-- 							<to uri="xslt:xsl/BBBRequestTransform.xsl" /> -->
+<!-- 							<to	uri="cxf:http://localhost:8186/BBB?wsdlURL=wsdl/BBB.wsdl&amp;dataFormat=MESSAGE" /> -->
+<!-- 							<to uri="xslt:xsl/BBBResponseTransform.xsl" /> -->
+<!-- 							<log message="From BBB ${body}" /> -->
+
+						<setHeader headerName="corrId">
+							<simple>${id}</simple>
+						</setHeader>
+						
+						<aggregate strategyRef="aggregateRequestsStrategy"	completionTimeout="5000">
+							<correlationExpression>
+								<simple>${header.corrId}</simple>
+							</correlationExpression>
+							<transform>
+								<simple>&lt;root&gt;${body}&lt;&#47;root&gt;</simple>
+							</transform>
+							<log message="Calling BBB with ${body}" />
+							<to uri="xslt:xsl/BBBRequestTransform.xsl" />
+							<to	uri="cxf:http://localhost:8186/BBB?wsdlURL=wsdl/BBB.wsdl&amp;dataFormat=MESSAGE" />
+							<to uri="xslt:xsl/BBBResponseTransform.xsl" />
+							<log message="From BBB ${body}" />
+						</aggregate>
+					</when>
+					<when>
+						<xpath>//*:SystemID/text() = 'CCC'</xpath>
+						<to uri="xslt:xsl/CCCRequestTransform.xsl" />
+						<to	uri="cxf:http://localhost:8187/CCC?wsdlURL=wsdl/CCC.wsdl&amp;dataFormat=MESSAGE" />
+						<to uri="xslt:xsl/CCCResponseTransform.xsl" />
+						<log message="From CCC ${body}" />
+					</when>
+				</choice>
 			</split>
+
+			<!-- Comes back from the split here -->
 			<transform>
 				<simple>&lt;root&gt;${body}&lt;&#47;root&gt;</simple>
-			</transform>		
-			<log message="Outgoing message before transform ${body}" />			
+			</transform>
+			<log message="Response message before transform ${body}" />
 			<to uri="xslt:xsl/ConsumerResponseTransform.xsl" />
-			<log message="Outgoing message ${body}" />
-		</route>
-		
-		<route id="serviceChoiceRoute">
-			<from uri="direct:serviceChoice" />
-			<log message="Product ${body}" />
-			<choice>
-				<when>
-					<xpath>//*:SystemID/text() = 'AAA'</xpath>
-					<to uri="direct:serviceAAA" />
-				</when>
-				<when>
-					<xpath>//*:SystemID/text() = 'BBB'</xpath>
-					<to uri="direct:serviceBBB" />
-				</when>
-				<when>
-					<xpath>//*:SystemID/text() = 'CCC'</xpath>
-					<to uri="direct:serviceCCC" />
-				</when>
-			</choice>
+			<log message="Response message ${body}" />
 		</route>
 
-		<route customId="true" id="serviceAAA">
-			<from uri="direct:serviceAAA" />
-			<log message="Service AAA ${body}" />
-			<!-- TODO Active MQ/WMQ -->
-		</route>
-
-		<route customId="true" id="serviceBBB">
-			<from uri="direct:serviceBBB" />
-			<to uri="xslt:xsl/BBBRequestTransform.xsl" />		
-			<!-- NEED TO AGGREGATE HERE AND SEND ONE MESSAGE BASED ON MESSAGE ID -->
-			<to	uri="cxf:http://localhost:8186/BBB?wsdlURL=wsdl/BBB.wsdl&amp;dataFormat=MESSAGE" />
-			<to uri="xslt:xsl/BBBResponseTransform.xsl" />
-			<log message="From BBB ${body}" />							
-		</route>
-
-		<route customId="true" id="serviceCCC">
-			<from uri="direct:serviceCCC" />
-			<to uri="xslt:xsl/CCCRequestTransform.xsl" />		
-			<to	uri="cxf:http://localhost:8187/CCC?wsdlURL=wsdl/CCC.wsdl&amp;dataFormat=MESSAGE" />
-			<to uri="xslt:xsl/CCCResponseTransform.xsl" />	
-			<log message="From CCC ${body}" />							
-		</route>
+	
 
 	</camelContext>
 

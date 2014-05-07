@@ -54,6 +54,7 @@ In SOAP UI send the following to the service
 ###ServiceCCC 
 - Transforms request into response via XSLT
 - Sends different response for Id 3333333333 and 5555555555
+- Waits for 10 seconds for id of TIMEOUT
 - Any other id has warning message
 
 ####Install

@@ -5,7 +5,7 @@
 		serviceClass="org.poc.ws.ServiceCCCEndpoint" xmlns:ns="suncorp-com-au:schema:enterprise:getaddress:2012:05" />
 
 
-	<camelContext id="address-service-context"
+	<camelContext id="CCC-service-context"
 		xmlns="http://camel.apache.org/schema/blueprint">
 		<route id="serviceCCCRoute">
 			<from uri="cxf:bean:serviceCCCEndpoint?dataFormat=PAYLOAD" />
@@ -24,7 +24,14 @@
 				<when>
 					<xpath>//*:CustomerID/text() = '5555555555'</xpath>
 					<to uri="xslt:CCCTransform5.xsl" />
-				</when>		
+				</when>
+				<when>
+					<xpath>//*:CustomerID/text() = 'TIMEOUT'</xpath>
+        			<delay>
+            			<constant>10000</constant>
+        			</delay>
+        			<to uri="xslt:CCCTransform5.xsl" />
+				</when>								
 				<otherwise>
 					<to uri="xslt:CCCTransformWarning.xsl" />
 				</otherwise>		
