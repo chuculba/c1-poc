@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <NS1:GetAddressResponse xmlns:NS1="urn:suncorp-com-au:schema:enterprise:getaddress:2012:05">
+            <NS1:Warning>
+                <NS1:Number>12345</NS1:Number>
+                <NS1:Description>Account will expire in 3 days</NS1:Description>
+                <NS1:SourceApplication>AAA</NS1:SourceApplication>
+            </NS1:Warning>
+            <NS1:PartialProductListInd>Y</NS1:PartialProductListInd>
+            <NS1:ProductSystemCustomer>
+                <NS1:ProductCustomerID>1111111111</NS1:ProductCustomerID>
+                <NS1:ProductSystemID>AAA</NS1:ProductSystemID>
+                <NS1:JointCustomerFlag>Y</NS1:JointCustomerFlag>
+                <NS1:CustomerAccountName>MRS J M ALLEN</NS1:CustomerAccountName>
+                <NS1:Address>
+                    <NS1:Type>ST</NS1:Type>
+                    <NS1:AddressLine1>GLENMEAD VILLAGE1</NS1:AddressLine1>
+                    <NS1:AddressLine2>GLENMEAD VILLAGE2</NS1:AddressLine2>
+                    <NS1:AddressLine3>15 SHORT ST</NS1:AddressLine3>
+                    <NS1:TownLocality>REDLYNCH</NS1:TownLocality>
+                    <NS1:State>QLD</NS1:State>
+                    <NS1:Postcode>4870</NS1:Postcode>
+                    <NS1:CountryCode>AU</NS1:CountryCode>
+                    <NS1:Attribute>1</NS1:Attribute>
+                </NS1:Address>
+                <NS1:Product>
+                    <NS1:AccountNumber>product accountNumber</NS1:AccountNumber>
+                    <NS1:AccountProduct>product accountProduct</NS1:AccountProduct>
+                    <NS1:AccountCompany>00010</NS1:AccountCompany>
+                    <NS1:Description>product </NS1:Description>
+                    <NS1:RelationshipType>PRI</NS1:RelationshipType>
+                    <NS1:Address>
+                        <NS1:Type>address type</NS1:Type>
+                        <NS1:AddressLine1>GLENMEAD VILLAGE1</NS1:AddressLine1>
+                        <NS1:AddressLine2>GLENMEAD VILLAGE2</NS1:AddressLine2>
+                        <NS1:AddressLine3>15 SHORT ST</NS1:AddressLine3>
+                        <NS1:TownLocality>REDLYNCH</NS1:TownLocality>
+                        <NS1:State>QLD</NS1:State>
+                        <NS1:Postcode>4870</NS1:Postcode>
+                        <NS1:CountryCode>AU</NS1:CountryCode>
+                        <NS1:Attribute>1</NS1:Attribute>
+                        <NS1:AddressSeq>1</NS1:AddressSeq>
+                        <NS1:AccountName>MRS J M ALLEN</NS1:AccountName>
+                        <NS1:Risk>
+                            <NS1:Description>risk description</NS1:Description>
+                            <NS1:Count>risk count</NS1:Count>
+                        </NS1:Risk>
+                    </NS1:Address>
+                </NS1:Product>
+            </NS1:ProductSystemCustomer>
+            <NS1:ProductSystemCustomer>
+                <NS1:ProductCustomerID>4444444444</NS1:ProductCustomerID>
+                <NS1:ProductSystemID>AAA</NS1:ProductSystemID>
+                <NS1:JointCustomerFlag>Y</NS1:JointCustomerFlag>
+                <NS1:CustomerAccountName>MRS J M ALLEN</NS1:CustomerAccountName>
+                <NS1:Address>
+                    <NS1:Type>ST</NS1:Type>
+                    <NS1:AddressLine1>GLENMEAD VILLAGE1</NS1:AddressLine1>
+                    <NS1:AddressLine2>GLENMEAD VILLAGE2</NS1:AddressLine2>
+                    <NS1:AddressLine3>15 SHORT ST</NS1:AddressLine3>
+                    <NS1:TownLocality>REDLYNCH</NS1:TownLocality>
+                    <NS1:State>QLD</NS1:State>
+                    <NS1:Postcode>4870</NS1:Postcode>
+                    <NS1:CountryCode>AU</NS1:CountryCode>
+                    <NS1:Attribute>1</NS1:Attribute>
+                </NS1:Address>
+                <NS1:Product>
+                    <NS1:AccountNumber>product accountNumber 2</NS1:AccountNumber>
+                    <NS1:AccountProduct>product accountProduct 2</NS1:AccountProduct>
+                    <NS1:AccountCompany>00010</NS1:AccountCompany>
+                    <NS1:Description>product </NS1:Description>
+                    <NS1:RelationshipType>PRI</NS1:RelationshipType>
+                    <NS1:Address>
+                        <NS1:Type>address type</NS1:Type>
+                        <NS1:AddressLine1>GLENMEAD VILLAGE1</NS1:AddressLine1>
+                        <NS1:AddressLine2>GLENMEAD VILLAGE2</NS1:AddressLine2>
+                        <NS1:AddressLine3>15 SHORT ST</NS1:AddressLine3>
+                        <NS1:TownLocality>REDLYNCH</NS1:TownLocality>
+                        <NS1:State>QLD</NS1:State>
+                        <NS1:Postcode>4870</NS1:Postcode>
+                        <NS1:CountryCode>AU</NS1:CountryCode>
+                        <NS1:Attribute>1</NS1:Attribute>
+                        <NS1:AddressSeq>1</NS1:AddressSeq>
+                        <NS1:AccountName>MRS J M ALLEN</NS1:AccountName>
+                        <NS1:Risk>
+                            <NS1:Description>risk description</NS1:Description>
+                            <NS1:Count>risk count</NS1:Count>
+                        </NS1:Risk>
+                    </NS1:Address>
+                </NS1:Product>
+            </NS1:ProductSystemCustomer>
+            <NS1:ProductSystemCustomer>
+                <NS1:ProductCustomerID>2222222222</NS1:ProductCustomerID>
+                <NS1:ProductSystemID>BBB</NS1:ProductSystemID>
+                <NS1:JointCustomerFlag>N</NS1:JointCustomerFlag>
+                <NS1:CustomerAccountName>Mr Donald Duck</NS1:CustomerAccountName>
+                <NS1:Address>
+                    <NS1:Type>ST</NS1:Type>
+                    <NS1:AddressLine1>Disneyland</NS1:AddressLine1>
+                    <NS1:AddressLine2>My Village</NS1:AddressLine2>
+                    <NS1:AddressLine3>2 Perfect Place</NS1:AddressLine3>
+                    <NS1:TownLocality>SomeTown</NS1:TownLocality>
+                    <NS1:State>QLD</NS1:State>
+                    <NS1:Postcode>4123</NS1:Postcode>
+                    <NS1:CountryCode>AU</NS1:CountryCode>
+                    <NS1:Attribute>1</NS1:Attribute>
+                </NS1:Address>
+                <NS1:Product>
+                    <NS1:AccountNumber>product accountNumber</NS1:AccountNumber>
+                    <NS1:AccountProduct>product accountProduct</NS1:AccountProduct>
+                    <NS1:AccountCompany>00010</NS1:AccountCompany>
+                    <NS1:Description>product </NS1:Description>
+                    <NS1:RelationshipType>PRI</NS1:RelationshipType>
+                    <NS1:Address>
+                        <NS1:Type>address type</NS1:Type>
+                        <NS1:AddressLine1>Disneyland</NS1:AddressLine1>
+                        <NS1:AddressLine2>My Village</NS1:AddressLine2>
+                        <NS1:AddressLine3>2 Perfect Place</NS1:AddressLine3>
+                        <NS1:TownLocality>SomeTown</NS1:TownLocality>
+                        <NS1:State>QLD</NS1:State>
+                        <NS1:Postcode>4123</NS1:Postcode>
+                        <NS1:CountryCode>AU</NS1:CountryCode>
+                        <NS1:Attribute>1</NS1:Attribute>
+                        <NS1:AddressSeq>1</NS1:AddressSeq>
+                        <NS1:AccountName>Mr Donald Duck</NS1:AccountName>
+                        <NS1:Risk>
+                            <NS1:Description>risk description</NS1:Description>
+                            <NS1:Count>risk count</NS1:Count>
+                        </NS1:Risk>
+                    </NS1:Address>
+                </NS1:Product>
+            </NS1:ProductSystemCustomer>
+            <NS1:ProductSystemCustomer>
+                <NS1:ProductCustomerID>3333333333</NS1:ProductCustomerID>
+                <NS1:ProductSystemID>CCC</NS1:ProductSystemID>
+                <NS1:JointCustomerFlag>N</NS1:JointCustomerFlag>
+                <NS1:CustomerAccountName>Mr Bond</NS1:CustomerAccountName>
+                <NS1:Address>
+                    <NS1:Type>ST</NS1:Type>
+                    <NS1:AddressLine1>James Cloud</NS1:AddressLine1>
+                    <NS1:AddressLine2>My Cloud</NS1:AddressLine2>
+                    <NS1:AddressLine3>3 Cloudy Place</NS1:AddressLine3>
+                    <NS1:TownLocality>SomeTownAgain</NS1:TownLocality>
+                    <NS1:State>QLD</NS1:State>
+                    <NS1:Postcode>4456</NS1:Postcode>
+                    <NS1:CountryCode>AU</NS1:CountryCode>
+                    <NS1:Attribute>1</NS1:Attribute>
+                </NS1:Address>
+                <NS1:Product>
+                    <NS1:AccountNumber>product accountNumber</NS1:AccountNumber>
+                    <NS1:AccountProduct>product accountProduct</NS1:AccountProduct>
+                    <NS1:AccountCompany>00010</NS1:AccountCompany>
+                    <NS1:Description>product </NS1:Description>
+                    <NS1:RelationshipType>PRI</NS1:RelationshipType>
+                    <NS1:Address>
+                        <NS1:Type>address type</NS1:Type>
+                        <NS1:AddressLine1>James Cloud</NS1:AddressLine1>
+                        <NS1:AddressLine2>My Cloud</NS1:AddressLine2>
+                        <NS1:AddressLine3>3 Cloudy Place</NS1:AddressLine3>
+                        <NS1:TownLocality>SomeTownAgain</NS1:TownLocality>
+                        <NS1:State>QLD</NS1:State>
+                        <NS1:Postcode>4456</NS1:Postcode>
+                        <NS1:CountryCode>AU</NS1:CountryCode>
+                        <NS1:Attribute>1</NS1:Attribute>
+                        <NS1:AddressSeq>1</NS1:AddressSeq>
+                        <NS1:AccountName>Mr Bond</NS1:AccountName>
+                        <NS1:Risk>
+                            <NS1:Description>risk description</NS1:Description>
+                            <NS1:Count>risk count</NS1:Count>
+                        </NS1:Risk>
+                    </NS1:Address>
+                </NS1:Product>
+            </NS1:ProductSystemCustomer>
+            <NS1:ProductSystemCustomer>
+                <NS1:ProductCustomerID>5555555555</NS1:ProductCustomerID>
+                <NS1:ProductSystemID>CCC</NS1:ProductSystemID>
+                <NS1:JointCustomerFlag>N</NS1:JointCustomerFlag>
+                <NS1:CustomerAccountName>Mr Bond</NS1:CustomerAccountName>
+                <NS1:Address>
+                    <NS1:Type>ST</NS1:Type>
+                    <NS1:AddressLine1>James Cloud</NS1:AddressLine1>
+                    <NS1:AddressLine2>My Cloud</NS1:AddressLine2>
+                    <NS1:AddressLine3>3 Cloudy Place</NS1:AddressLine3>
+                    <NS1:TownLocality>SomeTownAgain</NS1:TownLocality>
+                    <NS1:State>QLD</NS1:State>
+                    <NS1:Postcode>4456</NS1:Postcode>
+                    <NS1:CountryCode>AU</NS1:CountryCode>
+                    <NS1:Attribute>1</NS1:Attribute>
+                </NS1:Address>
+                <NS1:Product>
+                    <NS1:AccountNumber>product accountNumber 2</NS1:AccountNumber>
+                    <NS1:AccountProduct>product accountProduct 2</NS1:AccountProduct>
+                    <NS1:AccountCompany>00010</NS1:AccountCompany>
+                    <NS1:Description>product </NS1:Description>
+                    <NS1:RelationshipType>PRI</NS1:RelationshipType>
+                    <NS1:Address>
+                        <NS1:Type>address type</NS1:Type>
+                        <NS1:AddressLine1>James Cloud</NS1:AddressLine1>
+                        <NS1:AddressLine2>My Cloud</NS1:AddressLine2>
+                        <NS1:AddressLine3>3 Cloudy Place</NS1:AddressLine3>
+                        <NS1:TownLocality>SomeTownAgain</NS1:TownLocality>
+                        <NS1:State>QLD</NS1:State>
+                        <NS1:Postcode>4456</NS1:Postcode>
+                        <NS1:CountryCode>AU</NS1:CountryCode>
+                        <NS1:Attribute>1</NS1:Attribute>
+                        <NS1:AddressSeq>1</NS1:AddressSeq>
+                        <NS1:AccountName>Mr Bond</NS1:AccountName>
+                        <NS1:Risk>
+                            <NS1:Description>risk description</NS1:Description>
+                            <NS1:Count>risk count</NS1:Count>
+                        </NS1:Risk>
+                    </NS1:Address>
+                </NS1:Product>
+            </NS1:ProductSystemCustomer>
+        </NS1:GetAddressResponse>
+    </soapenv:Body>
+</soapenv:Envelope>

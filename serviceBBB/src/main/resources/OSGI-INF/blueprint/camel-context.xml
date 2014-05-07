@@ -1,0 +1,31 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf">
+
+	<property-placeholder persistent-id="org.fusesource.camel.ws"
+		xmlns="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0">
+		<default-properties>
+			<property name="server" value="http://localhost:8187" />
+		</default-properties>
+	</property-placeholder>
+
+	<!-- address soap service -->
+	<cxf:cxfEndpoint id="serviceBBBEndpoint" address="${server}/BBB"
+		serviceClass="org.poc.ws.ServiceBBBEndpoint" />
+
+
+	<camelContext id="BBB-service-context"
+		xmlns="http://camel.apache.org/schema/blueprint">
+		<route id="serviceBBBRoute">
+			<from uri="cxf:bean:serviceBBBEndpoint?dataFormat=PAYLOAD" />
+			<log message="Incoming message ${body}" />
+			<setHeader headerName="correlationId">
+				<simple>${id}</simple>
+			</setHeader>
+			<setHeader headerName="userId">
+				<simple>wbmuserBBB</simple>
+			</setHeader>
+			<to uri="xslt:BBBTransform.xsl" />
+			<log message="Outgoing message ${body}" />
+		</route>
+	</camelContext>
+</blueprint>

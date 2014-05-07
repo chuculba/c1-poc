@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <urn:GetAddressRequest xmlns:urn="urn:suncorp-com-au:schema:enterprise:getaddress:2012:05">
+            <urn:GetAddressCriteria>
+                <urn:Product>
+                    <urn:CustomerID>1111111111</urn:CustomerID>
+                    <urn:SystemID>AAA</urn:SystemID>
+                    <urn:JointCustomer>Y</urn:JointCustomer>
+                </urn:Product>
+                <urn:Product>
+                    <urn:CustomerID>2222222222</urn:CustomerID>
+                    <urn:SystemID>BBB</urn:SystemID>
+                    <urn:JointCustomer>N</urn:JointCustomer>
+                </urn:Product>
+                <urn:Product>
+                    <urn:CustomerID>3333333333</urn:CustomerID>
+                    <urn:SystemID>CCC</urn:SystemID>
+                    <urn:JointCustomer>N</urn:JointCustomer>
+                </urn:Product>
+                <urn:Product>
+                    <urn:CustomerID>4444444444</urn:CustomerID>
+                    <urn:SystemID>AAA</urn:SystemID>
+                    <urn:JointCustomer>Y</urn:JointCustomer>
+                </urn:Product>
+                <urn:Product>
+                    <urn:CustomerID>5555555555</urn:CustomerID>
+                    <urn:SystemID>CCC</urn:SystemID>
+                    <urn:JointCustomer>N</urn:JointCustomer>
+                </urn:Product>
+                <!-- Will create a warning -->
+                <urn:Product>
+                    <urn:CustomerID>8888888888</urn:CustomerID>
+                    <urn:SystemID>CCC</urn:SystemID>
+                    <urn:JointCustomer>N</urn:JointCustomer>
+                </urn:Product>
+            </urn:GetAddressCriteria>
+        </urn:GetAddressRequest>
+    </soapenv:Body>
+</soapenv:Envelope>

@@ -1,0 +1,30 @@
+<Message>
+	<Header>
+		<Routing>
+			<CorrelationId>123456789012345678901234</CorrelationId>
+			<ServiceName>ENTERPRISE</ServiceName>
+			<OperationName>GETADDRESS</OperationName>
+			<SourceApplication>AAA</SourceApplication>
+		</Routing>
+		<Security>
+			<UserName>
+				<UserId>wmbuser</UserId>
+				<Password>pwd01</Password>
+			</UserName>
+		</Security>
+	</Header>
+	<Body>
+        <GetAddressRequest xmlns="urn:suncorp-com-au:schema:enterprise:getaddress:2012:05">
+            <ProductSystemCustomer>
+                    <ProductCustomerID>1111111111</ProductCustomerID>
+                    <ProductSystemID>AAA</ProductSystemID>
+                    <JointCustomerFlag>N</JointCustomerFlag>
+            </ProductSystemCustomer>
+            <ProductSystemCustomer>
+                    <ProductCustomerID>4444444444</ProductCustomerID>
+                    <ProductSystemID>AAA</ProductSystemID>
+                    <JointCustomerFlag>Y</JointCustomerFlag>
+            </ProductSystemCustomer>
+        </GetAddressRequest>
+	</Body>
+</Message>

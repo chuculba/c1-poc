@@ -1,0 +1,44 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf">
+
+	<property-placeholder persistent-id="org.fusesource.camel.ws"
+		xmlns="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0">
+		<default-properties>
+			<property name="server" value="http://localhost:8186" />
+		</default-properties>
+	</property-placeholder>
+
+	<!-- address soap service -->
+	<cxf:cxfEndpoint id="serviceCCCEndpoint" address="${server}/CCC"
+		serviceClass="org.poc.ws.ServiceCCCEndpoint" xmlns:ns="suncorp-com-au:schema:enterprise:getaddress:2012:05" />
+
+
+	<camelContext id="address-service-context"
+		xmlns="http://camel.apache.org/schema/blueprint">
+		<route id="serviceCCCRoute">
+			<from uri="cxf:bean:serviceCCCEndpoint?dataFormat=PAYLOAD" />
+			<log message="Incoming message ${body}" />
+			<setHeader headerName="correlationId">
+				<simple>${id}</simple>
+			</setHeader>
+			<setHeader headerName="userId">
+				<simple>wbmuserCCC</simple>
+			</setHeader>
+			<choice>
+				<when>
+					<xpath>//*:CustomerID/text() = '3333333333'</xpath>
+					<to uri="xslt:CCCTransform3.xsl" />
+				</when>
+				<when>
+					<xpath>//*:CustomerID/text() = '5555555555'</xpath>
+					<to uri="xslt:CCCTransform5.xsl" />
+				</when>		
+				<otherwise>
+					<to uri="xslt:CCCTransformWarning.xsl" />
+				</otherwise>		
+			</choice>
+
+			<log message="Outgoing message ${body}" />
+		</route>
+	</camelContext>
+</blueprint>

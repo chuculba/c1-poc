@@ -1,0 +1,91 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:suncorp-com-au:schema:enterprise:getaddress:2012:05" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="GetAddressResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element type="xs:string" name="PartialProductListInd"/>
+        <xs:element name="ProductSystemCustomer">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:long" name="ProductCustomerID"/>
+              <xs:element type="xs:string" name="ProductSystemID"/>
+              <xs:element type="xs:string" name="JointCustomerFlag"/>
+              <xs:element type="xs:string" name="CustomerAccountName"/>
+              <xs:element name="Address">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="Type"/>
+                    <xs:element type="xs:string" name="AddressLine1"/>
+                    <xs:element type="xs:string" name="AddressLine2"/>
+                    <xs:element type="xs:string" name="AddressLine3"/>
+                    <xs:element type="xs:string" name="TownLocality"/>
+                    <xs:element type="xs:string" name="State"/>
+                    <xs:element type="xs:short" name="Postcode"/>
+                    <xs:element type="xs:string" name="CountryCode"/>
+                    <xs:element type="xs:byte" name="Attribute"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Product">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="AccountNumber"/>
+                    <xs:element type="xs:string" name="AccountProduct"/>
+                    <xs:element type="xs:byte" name="AccountCompany"/>
+                    <xs:element type="xs:string" name="Description"/>
+                    <xs:element type="xs:string" name="RelationshipType"/>
+                    <xs:element name="Address">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:string" name="Type"/>
+                          <xs:element type="xs:string" name="AddressLine1"/>
+                          <xs:element type="xs:string" name="AddressLine2"/>
+                          <xs:element type="xs:string" name="AddressLine3"/>
+                          <xs:element type="xs:string" name="TownLocality"/>
+                          <xs:element type="xs:string" name="State"/>
+                          <xs:element type="xs:short" name="Postcode"/>
+                          <xs:element type="xs:string" name="CountryCode"/>
+                          <xs:element type="xs:byte" name="Attribute"/>
+                          <xs:element type="xs:byte" name="AddressSeq"/>
+                          <xs:element type="xs:string" name="AccountName"/>
+                          <xs:element name="Risk">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element type="xs:string" name="Description"/>
+                                <xs:element type="xs:string" name="Count"/>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+   <xs:element name="GetAddressRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="GetAddressCriteria">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Product">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:long" name="CustomerID"/>
+                    <xs:element type="xs:string" name="SystemID"/>
+                    <xs:element type="xs:string" name="JointCustomer"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+</xs:schema>

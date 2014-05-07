@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<features name="fuse" 
+  xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">    
+ 
+  
+    <feature version="${project.version}" name="serviceCCC">
+        <feature>camel-core</feature>
+        <feature>camel-blueprint</feature>
+        <feature>camel-jaxb</feature>
+        <feature>camel-bindy</feature>
+        <feature>camel-cxf</feature>
+        <feature>camel-spring</feature>        
+        <bundle>mvn:org.poc/serviceCCC/${project.version}</bundle>
+    </feature>
+</features>

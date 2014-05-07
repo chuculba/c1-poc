@@ -1,0 +1,104 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf">
+
+	<property-placeholder persistent-id="org.fusesource.camel.ws"
+		xmlns="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0">
+		<default-properties>
+			<property name="server" value="http://localhost:8185" />
+		</default-properties>
+	</property-placeholder>
+
+	<!-- address soap service -->
+	<cxf:cxfEndpoint id="addressEndpoint" address="${server}/address"
+		serviceClass="org.poc.ws.AddressEndpoint" xmlns:ns="suncorp-com-au:schema:enterprise:getaddress:2012:05" />
+		
+<cxf:cxfEndpoint id="serviceBBBEndpoint" 
+address="http://localhost:8187/BBB"
+endpointName="n:ServiceBBBEndpointPort"
+serviceName="n:ServiceBBBEndpointService"
+wsdlURL="BBB.wsdl"
+xmlns:n="urn:suncorp-com-au:schema:enterprise:getaddress:2012:05"/>
+		
+		
+
+	<bean id="aggregateResponseStrategy" class="org.poc.transformer.AggregateResponseStrategy" />
+
+	<bean id="testTransformer" class="org.poc.transformer.TestTransformer" />
+
+
+	<camelContext id="address-service-context"
+		xmlns="http://camel.apache.org/schema/blueprint">
+		<route id="addressRoute">
+			<from uri="cxf:bean:addressEndpoint?dataFormat=PAYLOAD" />
+			<log message="Incoming message ${body}" />
+			<split streaming="true" strategyRef="aggregateResponseStrategy">
+				<tokenize token="Product" xml="true"
+					inheritNamespaceTagName="GetAddressRequest" />
+				<to uri="direct:serviceChoice" />
+			</split>
+			<log message="Outgoing message before transform ${body}" />
+			<to uri="xslt:ConsumerResponseTransform.xsl" />
+
+			<to uri="xslt:ConsumerResponseDummyTransform.xsl" />
+			<log message="Outgoing message after transtsform ${body}" />
+
+		</route>
+		
+		<route id="serviceChoiceRoute">
+			<from uri="direct:serviceChoice" />
+			<log message="Product ${body}" />
+			<choice>
+				<when>
+					<xpath>//*:SystemID/text() = 'AAA'</xpath>
+					<to uri="direct:serviceAAA" />
+				</when>
+				<when>
+					<xpath>//*:SystemID/text() = 'BBB'</xpath>
+					<to uri="direct:serviceBBB" />
+				</when>
+				<when>
+					<xpath>//*:SystemID/text() = 'CCC'</xpath>
+					<to uri="direct:serviceCCC" />
+				</when>
+				<otherwise>
+					<to uri="direct:error" />
+				</otherwise>
+			</choice>
+		</route>
+		<route customId="true" id="serviceAAA">
+			<from uri="direct:serviceAAA" />
+			<log message="Service AAA ${body}" />
+			<!-- TODO Active MQ/WMQ -->
+		</route>
+		<route customId="true" id="serviceBBB">
+			<from uri="direct:serviceBBB" />
+			<log message="Service BBB ${body}" />
+			<to uri="xslt:BBBRequestTransform.xsl" />
+<!-- 			<removeHeaders pattern="*"/> -->
+			<setHeader headerName="operationNamespace">
+				<simple>urn:suncorp-com-au:schema:enterprise:getaddress:2012:05</simple>
+			</setHeader>
+			<setHeader headerName="operationName">
+				<simple>GetAddressRequest</simple>
+			</setHeader>
+			
+			<!-- NEED TO AGGREGATE HERE AND SEND ONE MESSAGE BASED ON MESSAGE ID -->
+			<to	uri="cxf:serviceBBBEndpoint?dataFormat=PAYLOAD" />
+			<convertBodyTo type="java.lang.String"/>
+			<log message="Response from BBB ${body}" />
+		</route>
+		<route customId="true" id="serviceCCC">
+			<from uri="direct:serviceCCC" />
+			<log message="Service CCC ${body}" />
+
+
+		</route>
+		<route customId="true" id="error">
+			<from uri="direct:error" />
+			<log message="Error ${body}" />
+		</route>
+
+	</camelContext>
+
+
+</blueprint>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.poc</groupId>
+		<artifactId>fuse</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>service</artifactId>
+	<packaging>bundle</packaging>
+
+	<name>POC Address Services</name>
+
+<!-- 	<properties> -->
+<!-- 		<servicemix.osgi.import> -->
+<!-- 			* -->
+<!-- 		</servicemix.osgi.import> -->
+<!-- 		<servicemix.osgi.export> -->
+<!-- 			org.apache.camel.demo.camel_wmq_amq_xa_tx, -->
+<!-- 			org.springframework.jms.connection.xa -->
+<!-- 		</servicemix.osgi.export> -->
+<!-- 		<servicemix.osgi.bundles /> -->
+<!-- 		<servicemix.osgi.dynamic.import /> -->
+<!-- 	</properties> -->
+
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-cxf</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-transports-http-jetty</artifactId>
+		</dependency>
+
+		<!-- Blueprint container support -->
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-blueprint</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-spring</artifactId>
+		</dependency>
+
+		<!-- ActiveMQ connectivity for Camel -->
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-camel</artifactId>
+		</dependency>
+
+		<!-- for transforming POJO<->XML -->
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-jaxb</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-pool</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jms</artifactId>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+
+	</dependencies>
+
+	<build>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+
+		<plugins>
+			<!-- generate OSGi bundle -->
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+<!-- 						<Export-Package>${servicemix.osgi.export}</Export-Package> -->
+<!-- 						<Import-Package>${servicemix.osgi.import}</Import-Package> -->
+<!-- 						<Require-Bundle>${servicemix.osgi.bundles}</Require-Bundle> -->
+<!-- 						<DynamicImport-Package>${servicemix.osgi.dynamic.import}</DynamicImport-Package> -->
+<!-- 						<Private-Package>${servicemix.osgi.private}</Private-Package> -->
+					</instructions>
+				</configuration>
+			</plugin>
+
+
+
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-features-xml</id>
+						<phase>package</phase>
+						<goals>
+							<goal>attach-artifact</goal>
+						</goals>
+						<configuration>
+							<artifacts>
+								<artifact>
+									<file>target/classes/features.xml</file>
+									<type>xml</type>
+									<classifier>features</classifier>
+								</artifact>
+							</artifacts>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxb2-maven-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<id>xjc</id>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<packageName>org.poc.generated</packageName> <!-- The name of your generated source package -->
+					<schemaFiles>enterprise.xsd</schemaFiles>
+				</configuration>
+
+			</plugin>
+
+		</plugins>
+	</build>
+
+</project>
