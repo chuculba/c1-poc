@@ -13,6 +13,13 @@
 							<NS1:SourceApplication><xsl:value-of select="NS1:SourceApplication"/></NS1:SourceApplication>
 						</NS1:Warning>
 					</xsl:for-each>
+					<xsl:for-each select="//Warning">
+						<NS1:Warning>
+							<NS1:Number><xsl:value-of select="Number"/></NS1:Number>
+							<NS1:Description><xsl:value-of select="Description"/></NS1:Description>
+							<NS1:SourceApplication><xsl:value-of select="SourceApplication"/></NS1:SourceApplication>
+						</NS1:Warning>
+					</xsl:for-each>					
 					<NS1:PartialProductListInd>Y</NS1:PartialProductListInd>
 					<xsl:for-each select="//NS1:ProductSystemCustomer">
 						<NS1:ProductSystemCustomer>

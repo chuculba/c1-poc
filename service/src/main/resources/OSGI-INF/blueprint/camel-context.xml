@@ -33,32 +33,47 @@
 			<!-- Split all the messages -->
 			<to uri="xslt:xsl/ConsumerSplitTransform.xsl?saxon=true" />
 			
-			<split streaming="true" parallelProcessing="true" strategyRef="aggregateResponseStrategy">
+			
+			
+			<split streaming="true" parallelProcessing="true"
+				strategyRef="aggregateResponseStrategy">
 				<tokenize token="Service" xml="true"  />
+				<log message="Service ${body}" />
 				<choice>
 					<when>
 						<xpath>//SystemID/text() = 'AAA'</xpath>
+						<log message="Service AAA ${body}" />
 					</when>
 					<when>
 						<xpath>//SystemID/text() = 'BBB'</xpath>
+						<log message="Message in to BBB Aggregation ${id}" />
+
 						<transform>
 							<simple>&lt;root&gt;${body}&lt;&#47;root&gt;</simple>
 						</transform>
+						<log message="************* Calling BBB with ${body}" />
 						<to uri="xslt:xsl/BBBRequestTransform.xsl" />
-						<to	uri="cxf:http://localhost:8186/BBB?wsdlURL=wsdl/BBB.wsdl&amp;dataFormat=MESSAGE" />
-						<to uri="xslt:xsl/BBBResponseTransform.xsl" /> 
+						<to
+							uri="cxf:http://localhost:8186/BBB?wsdlURL=wsdl/BBB.wsdl&amp;dataFormat=MESSAGE" />
+						<to uri="xslt:xsl/BBBResponseTransform.xsl" />
+						<log message="From BBB ${body}" />
+ 
 					</when>
 					<when>
 						<xpath>//SystemID/text() = 'CCC'</xpath>
 						<setHeader headerName="serviceId">
 							<simple>CCC</simple>
 						</setHeader>
+						
 						<split streaming="true" parallelProcessing="true" strategyRef="aggregateResponseStrategy">
 							<tokenize token="Product" xml="true"  />
+							<log message="CCC Product ${body}" />
 							<to uri="xslt:xsl/CCCRequestTransform.xsl" />
 							<to	uri="cxf:http://localhost:8187/CCC?wsdlURL=wsdl/CCC.wsdl&amp;dataFormat=MESSAGE" />
 							<convertBodyTo type="java.lang.String"/>
+							<log message="From CCC Service ${body}" />
 							<to uri="xslt:xsl/CCCResponseTransform.xsl" />
+							<log message="From CCC Transformed ${body}" />
 						</split>
 					</when>
 				</choice>
@@ -68,6 +83,9 @@
 			<transform>
 				<simple>&lt;root&gt;${body}&lt;&#47;root&gt;</simple>
 			</transform>
+
+			<log message="From Routes Response ${body}" />
+
 			<to uri="xslt:xsl/ConsumerResponseTransform.xsl" />
 		</route>
 
