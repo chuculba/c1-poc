@@ -9,15 +9,24 @@
 		xmlns="http://camel.apache.org/schema/blueprint">
 		<route id="serviceBBBRoute">
 			<from uri="cxf:bean:serviceBBBEndpoint?dataFormat=PAYLOAD" />
-			<log message="Incoming message ${body}" />
+			<log message="BBB Incoming message ${body}" />
 			<setHeader headerName="correlationId">
 				<simple>${id}</simple>
 			</setHeader>
 			<setHeader headerName="userId">
 				<simple>wbmuserBBB</simple>
 			</setHeader>
-			<to uri="xslt:BBBTransform.xsl" />
-			<log message="Outgoing message ${body}" />
+			
+			<choice>
+				<when>
+					<xpath>//*:CustomerID/text() = 'TIMEOUT'</xpath>
+        			<delay>
+            			<constant>10000</constant>
+        			</delay>
+        		</when>								
+			</choice>			
+			<to uri="xslt:BBBTransform.xsl" />						
+			<log message="BBB Outgoing message ${body}" />
 		</route>
 	</camelContext>
 </blueprint>

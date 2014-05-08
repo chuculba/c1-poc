@@ -13,7 +13,7 @@
 		xmlns="http://camel.apache.org/schema/blueprint">
 		<route id="serviceCCCRoute">
 			<from uri="cxf:bean:serviceCCCEndpoint?dataFormat=PAYLOAD" />
-			<log message="Incoming message ${body}" />
+			<log message="CCC Incoming message ${body}" />
 			<setHeader headerName="correlationId">
 				<simple>${id}</simple>
 			</setHeader>
@@ -45,7 +45,7 @@
 				</otherwise>		
 			</choice>
 
-			<log message="Outgoing message ${body}" />
+			<log message="CCC Outgoing message ${body}" />
 		</route>
 	</camelContext>
 </blueprint>

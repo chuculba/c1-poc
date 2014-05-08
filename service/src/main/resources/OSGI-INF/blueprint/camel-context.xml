@@ -1,30 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
-	xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
-	xmlns:http-conf="http://cxf.apache.org/transports/http/configuration">
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camel="http://camel.apache.org/schema/blueprint"
+   xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+   xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
+   xmlns:http-conf="http://cxf.apache.org/transports/http/configuration"
+   xsi:schemaLocation="
+    http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+    http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
 
+	<!-- set timeouts -->
+    <http-conf:conduit name="*.http-conduit">
+        <http-conf:client ReceiveTimeout="2000" ConnectionTimeout="2000" />
+    </http-conf:conduit>
+
+	<!-- CXF endpoints -->
 	<cxf:cxfEndpoint id="addressEndpoint" address="http://localhost:8185/address"
 		serviceClass="org.poc.ws.AddressEndpoint" xmlns:ns="suncorp-com-au:schema:enterprise:getaddress:2012:05" />
 
+	<cxf:cxfEndpoint id="BBBEndpoint" address="http://localhost:8186/BBB" wsdlURL="wsdl/BBB.wsdl"/>
+
+	<cxf:cxfEndpoint id="CCCEndpoint" address="http://localhost:8187/CCC" wsdlURL="wsdl/CCC.wsdl"/>
+
+	<!-- Transformers -->
 	<bean id="aggregateResponseStrategy" class="org.poc.transformer.AggregateResponseStrategy" />
+	<bean id="addRootElementTransformer" class="org.poc.transformer.AddRootElementTransformer" />
 
-	<bean id="aggregateRequestsStrategy" class="org.poc.transformer.AggregateRequestsStrategy" />
+	<!-- Exception thrown if there are no responses -->
+	<bean id="soapException" class="javax.xml.soap.SOAPException">
+		<argument index="0" value="No Responses From Service"/>
+	</bean>
 
-	<!-- <import resource="classpath:META-INF/cxf/cxf.xml"/> -->
 
-	<http-conf:conduit name="*.http-conduit">
-		<http-conf:client ReceiveTimeout="2000" />
-	</http-conf:conduit>
+	<camelContext id="address-service-context"	xmlns="http://camel.apache.org/schema/blueprint">
 
-	<bean id="noErrorHandler" class="org.apache.camel.builder.NoErrorHandlerBuilder" />
-
-	<camelContext id="address-service-context"
-		xmlns="http://camel.apache.org/schema/blueprint" errorHandlerRef="noErrorHandler">
-		
+		<!-- When we get a timeout we continue processing so we can add a warning to the message -->
 		<onException>
-			<exception>java.lang.Exception</exception>
-			<continued><constant>true</constant></continued>
-		</onException>		
-		
+			<exception>java.net.SocketTimeoutException</exception>
+			<continued>
+				<constant>true</constant>
+			</continued>
+		</onException>
+
 		<route id="addressRoute">
 			<from uri="cxf:bean:addressEndpoint?dataFormat=MESSAGE" />
 			<convertBodyTo type="java.lang.String" />
@@ -32,12 +48,10 @@
 
 			<!-- Split all the messages -->
 			<to uri="xslt:xsl/ConsumerSplitTransform.xsl?saxon=true" />
-			
-			
-			
+
 			<split streaming="true" parallelProcessing="true"
 				strategyRef="aggregateResponseStrategy">
-				<tokenize token="Service" xml="true"  />
+				<tokenize token="Service" xml="true" />
 				<log message="Service ${body}" />
 				<choice>
 					<when>
@@ -47,32 +61,47 @@
 					<when>
 						<xpath>//SystemID/text() = 'BBB'</xpath>
 						<log message="Message in to BBB Aggregation ${id}" />
+						<setHeader headerName="serviceId">
+							<simple>BBB</simple>
+						</setHeader>
 
-						<transform>
-							<simple>&lt;root&gt;${body}&lt;&#47;root&gt;</simple>
-						</transform>
-						<log message="************* Calling BBB with ${body}" />
-						<to uri="xslt:xsl/BBBRequestTransform.xsl" />
-						<to
-							uri="cxf:http://localhost:8186/BBB?wsdlURL=wsdl/BBB.wsdl&amp;dataFormat=MESSAGE" />
-						<to uri="xslt:xsl/BBBResponseTransform.xsl" />
-						<log message="From BBB ${body}" />
- 
+						<doTry>
+							<to uri="bean:addRootElementTransformer" />
+							<to uri="xslt:xsl/BBBRequestTransform.xsl" />
+							<to	uri="cxf:bean:BBBEndpoint?dataFormat=MESSAGE" />
+							<to uri="xslt:xsl/BBBResponseTransform.xsl" />
+							<doCatch>
+								<exception>java.net.SocketTimeoutException</exception>
+								<setHeader headerName="description">
+									<simple>Exception thrown BBB ${exception.message}</simple>
+								</setHeader>												
+								<to uri="direct:handleCustomException"/>														
+							</doCatch>
+						</doTry>																			
+						<log message="From BBB Transformed ${body}" />
 					</when>
 					<when>
 						<xpath>//SystemID/text() = 'CCC'</xpath>
 						<setHeader headerName="serviceId">
 							<simple>CCC</simple>
 						</setHeader>
-						
+
 						<split streaming="true" parallelProcessing="true" strategyRef="aggregateResponseStrategy">
-							<tokenize token="Product" xml="true"  />
-							<log message="CCC Product ${body}" />
-							<to uri="xslt:xsl/CCCRequestTransform.xsl" />
-							<to	uri="cxf:http://localhost:8187/CCC?wsdlURL=wsdl/CCC.wsdl&amp;dataFormat=MESSAGE" />
-							<convertBodyTo type="java.lang.String"/>
-							<log message="From CCC Service ${body}" />
-							<to uri="xslt:xsl/CCCResponseTransform.xsl" />
+							<tokenize token="Product" xml="true" />
+							<log message="CCC Product ${body}" />							
+							<doTry>
+								<to uri="bean:addRootElementTransformer" />
+								<to uri="xslt:xsl/CCCRequestTransform.xsl" />
+								<to	uri="cxf:bean:CCCEndpoint?dataFormat=MESSAGE" />
+								<to uri="xslt:xsl/CCCResponseTransform.xsl" />
+								<doCatch>
+									<exception>java.net.SocketTimeoutException</exception>							
+									<setHeader headerName="description">
+										<simple>Exception thrown CCC ${exception.message}</simple>
+									</setHeader>												
+									<to uri="direct:handleCustomException"/>														
+								</doCatch>											
+							</doTry>										
 							<log message="From CCC Transformed ${body}" />
 						</split>
 					</when>
@@ -80,30 +109,43 @@
 			</split>
 
 			<!-- Comes back from the split here -->
-			<transform>
-				<simple>&lt;root&gt;${body}&lt;&#47;root&gt;</simple>
-			</transform>
-
 			<log message="From Routes Response ${body}" />
-
+			<to uri="bean:addRootElementTransformer" />			
 			<to uri="xslt:xsl/ConsumerResponseTransform.xsl" />
+			<log message="The Full Response ${body}" />
+			
+			<!-- if there are no valid responses in the message throw a soap fault -->
+			<choice>
+				<when>
+					<xpath>boolean(//*:ProductSystemCustomer/text())=false()</xpath>
+					<log message="==== FAILURE ==== ProductSystemCustomer in ${body}" />
+					<throwException ref="soapException"/>				
+				</when>
+				<otherwise>
+					<log message="==== OK ==== ProductSystemCustomer in ${body}" />
+				</otherwise>						
+			</choice>
+			
+			
+						
+			<!-- Otherwise return responses -->			
 		</route>
 
-
-		<route id="ExceptionHandling">
-			<from uri="direct:handleException" />
+		<!-- Add the caught exception to the outgoing message as a warning -->
+		<route id="CustomExceptionHandling">
+			<from uri="direct:handleCustomException" />
 			<setHeader headerName="number">
 				<simple>id</simple>
-			</setHeader>
-			<setHeader headerName="description">
-				<simple>Exception thrown ${exception.message}</simple>
 			</setHeader>
 			<setHeader headerName="source">
 				<simple>${header.serviceId}</simple>
 			</setHeader>
-			<log message="Exception thrown in service ${header.source} Description ${header.source} Message ${body}" />
+			<log message="Exception thrown in service ${header.source} Description ${header.description} Message ID ${header.number}" />
+			<to uri="bean:addRootElementTransformer" />					
 			<to uri="xslt:xsl/ErrorResponseTransform.xsl" />
+			<log message="The Exception Response ${body}" />			
 		</route>
+
 
 
 	</camelContext>

@@ -5,27 +5,27 @@
         <urn:GetAddressRequest xmlns:urn="urn:suncorp-com-au:schema:enterprise:getaddress:2012:05">
             <urn:GetAddressCriteria>
                 <urn:Product>
-                    <urn:CustomerID>1111111111</urn:CustomerID>
+                    <urn:CustomerID>TIMEOUT</urn:CustomerID>
                     <urn:SystemID>AAA</urn:SystemID>
                     <urn:JointCustomer>Y</urn:JointCustomer>
                 </urn:Product>
                 <urn:Product>
-                    <urn:CustomerID>2222222222</urn:CustomerID>
+                    <urn:CustomerID>TIMEOUT</urn:CustomerID>
                     <urn:SystemID>BBB</urn:SystemID>
                     <urn:JointCustomer>N</urn:JointCustomer>
                 </urn:Product>
                 <urn:Product>
-                    <urn:CustomerID>3333333333</urn:CustomerID>
+                    <urn:CustomerID>TIMEOUT</urn:CustomerID>
                     <urn:SystemID>CCC</urn:SystemID>
                     <urn:JointCustomer>N</urn:JointCustomer>
                 </urn:Product>
                 <urn:Product>
-                    <urn:CustomerID>4444444444</urn:CustomerID>
+                    <urn:CustomerID>TIMEOUT</urn:CustomerID>
                     <urn:SystemID>AAA</urn:SystemID>
                     <urn:JointCustomer>Y</urn:JointCustomer>
                 </urn:Product>
                 <urn:Product>
-                    <urn:CustomerID>5555555555</urn:CustomerID>
+                    <urn:CustomerID>TIMEOUT</urn:CustomerID>
                     <urn:SystemID>CCC</urn:SystemID>
                     <urn:JointCustomer>N</urn:JointCustomer>
                 </urn:Product>
