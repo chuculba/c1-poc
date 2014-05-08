@@ -30,6 +30,26 @@
 		<argument index="0" value="No Responses From Service"/>
 	</bean>
 
+	<!-- WMQ Queue connections -->
+	<bean id="wsjms" class="org.apache.camel.component.jms.JmsComponent">
+		<property name="connectionFactory" ref="WMQConnectionFactory" />
+	</bean>
+
+	<bean id="WMQConnectionFactory"
+		class="org.springframework.jms.connection.UserCredentialsConnectionFactoryAdapter">
+		<property name="targetConnectionFactory">
+			<bean class="com.ibm.mq.jms.MQQueueConnectionFactory">
+				<property name="transportType" value="1" />
+				<property name="queueManager" value="devqueuemanager" />
+				<property name="hostName" value="localhost" />
+				<property name="port" value="1414" />
+				<property name="channel" value="SYSTEM.DEF.SVRCONN" />
+				<property name="targetClientMatching" value="true" />
+				<property name="useConnectionPooling" value="true" />
+			</bean>
+		</property>
+	</bean>
+
 
 	<camelContext id="address-service-context"	xmlns="http://camel.apache.org/schema/blueprint">
 
@@ -57,6 +77,30 @@
 					<when>
 						<xpath>//SystemID/text() = 'AAA'</xpath>
 						<log message="Service AAA ${body}" />
+						<to uri="bean:addRootElementTransformer" />
+						<setHeader headerName="correlationId">
+							<simple>${id}</simple>
+						</setHeader>
+						<setHeader headerName="userId">
+							<simple>wbmuserAAA</simple>
+						</setHeader>
+						<setHeader headerName="password">
+							<simple>passwordAAA</simple>
+						</setHeader>
+						<doTry>						
+							<to uri="bean:addRootElementTransformer" />
+							<to uri="xslt:xsl/AAARequestTransform.xsl" />
+							<to uri="wsjms:SERVICE.AAA.IN?replyTo=SERVICE.AAA.OUT&amp;requestTimeout=60s" />							
+							<to uri="xslt:xsl/AAAResponseTransform.xsl" />
+							<doCatch>
+								<exception>java.net.SocketTimeoutException</exception>
+								<setHeader headerName="description">
+									<simple>Exception thrown AAA ${exception.message}</simple>
+								</setHeader>												
+								<to uri="direct:handleCustomException"/>														
+							</doCatch>
+						</doTry>																			
+						<log message="From AAA Transformed ${body}" />
 					</when>
 					<when>
 						<xpath>//SystemID/text() = 'BBB'</xpath>

@@ -1,15 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
-	xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf">
-
-	<property-placeholder persistent-id="org.fusesource.camel.ws"
-		xmlns="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0">
-		<default-properties>
-			<property name="server" value="http://localhost:8188" />
-		</default-properties>
-	</property-placeholder>
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
+	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 
+        http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
 
 
-
-	<camelContext id="AAA-service-context"	xmlns="http://camel.apache.org/schema/blueprint">
+	<!-- ******************** Camel route definition ********************* -->
+	<camelContext xmlns="http://camel.apache.org/schema/blueprint">
+		<route customId="true" id="wmq-to-wmq">
+			<from uri="wsjms:SERVICE.AAA.IN" />
+			<log message="JMS Message Received by AAA ${body}" />
+			<to uri="xslt:xsl/AAATransform.xsl" />
+			<log message="JMS Message Transformed by AAA ${body}" />
+			<log message="JMS Message Sending by AAA ${header.JMSCorrelationID} reply to ${header.JMSReplyTo}" />
+			<to uri="wsjms:SERVICE.AAA.OUT" />
+			<log message="JMS Message Sent by AAA ${header.JMSRedelivered}" />
+		</route>
 	</camelContext>
+
+
+
+	<bean id="wsjms" class="org.apache.camel.component.jms.JmsComponent">
+		<property name="connectionFactory" ref="WMQConnectionFactory" />
+	</bean>
+
+	<bean id="WMQConnectionFactory"
+		class="org.springframework.jms.connection.UserCredentialsConnectionFactoryAdapter">
+		<property name="targetConnectionFactory">
+			<bean class="com.ibm.mq.jms.MQQueueConnectionFactory">
+				<property name="transportType" value="1" />
+				<property name="queueManager" value="devqueuemanager" />
+				<property name="hostName" value="localhost" />
+				<property name="port" value="1414" />
+				<property name="channel" value="SYSTEM.DEF.SVRCONN" />
+				<property name="targetClientMatching" value="true" />
+				<property name="useConnectionPooling" value="true" />
+			</bean>
+		</property>
+	</bean>
+
+
+
+
+
 </blueprint>

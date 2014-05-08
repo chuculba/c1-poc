@@ -31,6 +31,22 @@ In SOAP UI send the following to the service
 - Timeout /service/src/test/resources/inbound.request-timeout.xml
 
 
+###ServiceAAA 
+
+- Websphere MQ Processing
+
+####Install
+
+features:addUrl mvn:org.poc/serviceAAA/1.0.0-SNAPSHOT/xml/features
+
+features:install serviceAAA
+
+
+####Testing
+
+This PULLS anything in XML format <root/> for example from MQ Queue SERVICE.AAA.IN transforms it and sends to SERVICE.AAA.OUT
+
+
 ###ServiceBBB 
 
 - Transforms request into response via XSLT
