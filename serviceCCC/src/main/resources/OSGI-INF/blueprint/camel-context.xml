@@ -4,6 +4,10 @@
 	<cxf:cxfEndpoint id="serviceCCCEndpoint" address="http://localhost:8187/CCC"
 		serviceClass="org.poc.ws.ServiceCCCEndpoint" xmlns:ns="suncorp-com-au:schema:enterprise:getaddress:2012:05" />
 
+	<bean id="dummyException" class="java.lang.IllegalArgumentException">
+		<argument index="0" value="CCC Service Exception Message"/>
+	</bean>
+
 
 	<camelContext id="CCC-service-context"
 		xmlns="http://camel.apache.org/schema/blueprint">
@@ -32,6 +36,10 @@
         			</delay>
         			<to uri="xslt:CCCTransform5.xsl" />
 				</when>								
+				<when>
+					<xpath>//*:CustomerID/text() = 'ERROR'</xpath>
+					<throwException ref="dummyException"/>
+				</when>	
 				<otherwise>
 					<to uri="xslt:CCCTransformWarning.xsl" />
 				</otherwise>		

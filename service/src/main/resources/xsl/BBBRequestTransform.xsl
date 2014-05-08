@@ -10,14 +10,14 @@
 				<urn:GetAddressRequest
 					xmlns:urn="urn:suncorp-com-au:schema:enterprise:getaddress:2012:05">
 					<urn:GetAddressCriteria>
-						<xsl:for-each select="//urn:Product">
+						<xsl:for-each select="//Product">
 							<urn:Product>
 								<urn:CustomerID>
-									<xsl:value-of select="urn:CustomerID" />
+									<xsl:value-of select="CustomerID" />
 								</urn:CustomerID>
 								<urn:SystemID>BBB</urn:SystemID>
 								<urn:JointCustomer>
-									<xsl:value-of select="urn:JointCustomer" />
+									<xsl:value-of select="JointCustomer" />
 								</urn:JointCustomer>
 							</urn:Product>
 						</xsl:for-each>

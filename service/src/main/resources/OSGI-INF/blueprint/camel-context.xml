@@ -19,57 +19,47 @@
 
 	<camelContext id="address-service-context"
 		xmlns="http://camel.apache.org/schema/blueprint" errorHandlerRef="noErrorHandler">
+		
+		<onException>
+			<exception>java.lang.Exception</exception>
+			<continued><constant>true</constant></continued>
+		</onException>		
+		
 		<route id="addressRoute">
 			<from uri="cxf:bean:addressEndpoint?dataFormat=MESSAGE" />
 			<convertBodyTo type="java.lang.String" />
 			<log message="Incoming message ${body}" />
 
 			<!-- Split all the messages -->
-			<split streaming="true" parallelProcessing="true" strategyRef="aggregateResponseStrategy" >
-				<tokenize token="Product" xml="true" inheritNamespaceTagName="GetAddressRequest" />
-				<log message="Product ${body}" />
+			<to uri="xslt:xsl/ConsumerSplitTransform.xsl?saxon=true" />
+			
+			<split streaming="true" parallelProcessing="true" strategyRef="aggregateResponseStrategy">
+				<tokenize token="Service" xml="true"  />
 				<choice>
 					<when>
-						<xpath>//*:SystemID/text() = 'AAA'</xpath>
-						<log message="Service AAA ${body}" />
+						<xpath>//SystemID/text() = 'AAA'</xpath>
 					</when>
 					<when>
-						<xpath>//*:SystemID/text() = 'BBB'</xpath>
-						<log message="Message in to BBB Aggregation ${id}" />
-						
-<!-- 							<transform> -->
-<!-- 								<simple>&lt;root&gt;${body}&lt;&#47;root&gt;</simple> -->
-<!-- 							</transform> -->
-<!-- 							<log message="************* Calling BBB with ${body}" /> -->
-<!-- 							<to uri="xslt:xsl/BBBRequestTransform.xsl" /> -->
-<!-- 							<to	uri="cxf:http://localhost:8186/BBB?wsdlURL=wsdl/BBB.wsdl&amp;dataFormat=MESSAGE" /> -->
-<!-- 							<to uri="xslt:xsl/BBBResponseTransform.xsl" /> -->
-<!-- 							<log message="From BBB ${body}" /> -->
-
-						<setHeader headerName="corrId">
-							<simple>${id}</simple>
+						<xpath>//SystemID/text() = 'BBB'</xpath>
+						<transform>
+							<simple>&lt;root&gt;${body}&lt;&#47;root&gt;</simple>
+						</transform>
+						<to uri="xslt:xsl/BBBRequestTransform.xsl" />
+						<to	uri="cxf:http://localhost:8186/BBB?wsdlURL=wsdl/BBB.wsdl&amp;dataFormat=MESSAGE" />
+						<to uri="xslt:xsl/BBBResponseTransform.xsl" /> 
+					</when>
+					<when>
+						<xpath>//SystemID/text() = 'CCC'</xpath>
+						<setHeader headerName="serviceId">
+							<simple>CCC</simple>
 						</setHeader>
-						
-						<aggregate strategyRef="aggregateRequestsStrategy"	completionTimeout="5000">
-							<correlationExpression>
-								<simple>${header.corrId}</simple>
-							</correlationExpression>
-							<transform>
-								<simple>&lt;root&gt;${body}&lt;&#47;root&gt;</simple>
-							</transform>
-							<log message="Calling BBB with ${body}" />
-							<to uri="xslt:xsl/BBBRequestTransform.xsl" />
-							<to	uri="cxf:http://localhost:8186/BBB?wsdlURL=wsdl/BBB.wsdl&amp;dataFormat=MESSAGE" />
-							<to uri="xslt:xsl/BBBResponseTransform.xsl" />
-							<log message="From BBB ${body}" />
-						</aggregate>
-					</when>
-					<when>
-						<xpath>//*:SystemID/text() = 'CCC'</xpath>
-						<to uri="xslt:xsl/CCCRequestTransform.xsl" />
-						<to	uri="cxf:http://localhost:8187/CCC?wsdlURL=wsdl/CCC.wsdl&amp;dataFormat=MESSAGE" />
-						<to uri="xslt:xsl/CCCResponseTransform.xsl" />
-						<log message="From CCC ${body}" />
+						<split streaming="true" parallelProcessing="true" strategyRef="aggregateResponseStrategy">
+							<tokenize token="Product" xml="true"  />
+							<to uri="xslt:xsl/CCCRequestTransform.xsl" />
+							<to	uri="cxf:http://localhost:8187/CCC?wsdlURL=wsdl/CCC.wsdl&amp;dataFormat=MESSAGE" />
+							<convertBodyTo type="java.lang.String"/>
+							<to uri="xslt:xsl/CCCResponseTransform.xsl" />
+						</split>
 					</when>
 				</choice>
 			</split>
@@ -78,12 +68,25 @@
 			<transform>
 				<simple>&lt;root&gt;${body}&lt;&#47;root&gt;</simple>
 			</transform>
-			<log message="Response message before transform ${body}" />
 			<to uri="xslt:xsl/ConsumerResponseTransform.xsl" />
-			<log message="Response message ${body}" />
 		</route>
 
-	
+
+		<route id="ExceptionHandling">
+			<from uri="direct:handleException" />
+			<setHeader headerName="number">
+				<simple>id</simple>
+			</setHeader>
+			<setHeader headerName="description">
+				<simple>Exception thrown ${exception.message}</simple>
+			</setHeader>
+			<setHeader headerName="source">
+				<simple>${header.serviceId}</simple>
+			</setHeader>
+			<log message="Exception thrown in service ${header.source} Description ${header.source} Message ${body}" />
+			<to uri="xslt:xsl/ErrorResponseTransform.xsl" />
+		</route>
+
 
 	</camelContext>
 

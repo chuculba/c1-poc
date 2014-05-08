@@ -50,6 +50,7 @@
         <feature>camel-bindy</feature>
         <feature>camel-cxf</feature>
         <feature>camel-spring</feature>
+        <feature>camel-saxon</feature>
         <bundle>mvn:org.poc/service/${project.version}</bundle>
     </feature>
 </features>

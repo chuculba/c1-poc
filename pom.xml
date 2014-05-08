@@ -23,7 +23,7 @@
 
 	<modules>
 		<module>service</module>
-		<module>serviceAAA</module>		
+		<module>serviceAAA</module>
 		<module>serviceBBB</module>
 		<module>serviceCCC</module>
 	</modules>
@@ -32,11 +32,15 @@
 		<activemq-version>5.8.0.redhat-60024</activemq-version>
 		<camel-version>2.10.0.redhat-60024</camel-version>
 		<cxf-version>2.6.0.redhat-60024</cxf-version>
-		<fabric.version>7.2.0.redhat-024</fabric.version>
-		<karaf-version>2.3.0.redhat-60024</karaf-version>
-		<smx-features-version>4.5.0.redhat-60024</smx-features-version>
+	
+<!-- 		<activemq-version>activemq-core-5.9.0.redhat-610379</activemq-version> -->
+<!-- 		<camel-version>camel-2.12.0.redhat-610379</camel-version> -->
+<!-- 		<cxf-version>2.7.0</cxf-version> -->
+<!-- 		<fabric.version>7.2.0.redhat-024</fabric.version> -->
+<!-- 		<karaf-version>2.3.0.redhat-60024</karaf-version> -->
+<!-- 		<smx-features-version>4.5.0.redhat-60024</smx-features-version> -->
 		<slf4j-api-version>1.6.1</slf4j-api-version>
-		<maven-camel-plugin-version>2.12.0.redhat-610376</maven-camel-plugin-version>
+<!-- 		<maven-camel-plugin-version>2.12.0.redhat-610376</maven-camel-plugin-version> -->
 
 		<!-- Maven build properties -->
 		<build-helper-plugin-version>1.7</build-helper-plugin-version>
@@ -97,7 +101,13 @@
 				<version>${camel-version}</version>
 			</dependency>
 
+			<!-- Camel Saxon for XSLT 2.0 -->
 
+			<dependency>
+				<groupId>org.apache.camel</groupId>
+				<artifactId>camel-saxon</artifactId>
+				<version>${camel-version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.apache.activemq</groupId>
 				<artifactId>activemq-client</artifactId>
@@ -139,21 +149,21 @@
 				<type>xml</type>
 			</dependency>
 
-			<dependency>
-				<groupId>org.apache.servicemix</groupId>
-				<artifactId>apache-servicemix</artifactId>
-				<version>${smx-features-version}</version>
-				<classifier>features</classifier>
-				<type>xml</type>
-			</dependency>
+<!-- 			<dependency> -->
+<!-- 				<groupId>org.apache.servicemix</groupId> -->
+<!-- 				<artifactId>apache-servicemix</artifactId> -->
+<!-- 				<version>${smx-features-version}</version> -->
+<!-- 				<classifier>features</classifier> -->
+<!-- 				<type>xml</type> -->
+<!-- 			</dependency> -->
 
-			<dependency>
-				<groupId>org.apache.activemq</groupId>
-				<artifactId>activemq-karaf</artifactId>
-				<version>${activemq-version}</version>
-				<classifier>features</classifier>
-				<type>xml</type>
-			</dependency>
+<!-- 			<dependency> -->
+<!-- 				<groupId>org.apache.activemq</groupId> -->
+<!-- 				<artifactId>activemq-karaf</artifactId> -->
+<!-- 				<version>${activemq-version}</version> -->
+<!-- 				<classifier>features</classifier> -->
+<!-- 				<type>xml</type> -->
+<!-- 			</dependency> -->
 
 			<dependency>
 				<groupId>org.slf4j</groupId>
